@@ -4,8 +4,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
+
 
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
@@ -15,14 +16,14 @@ import gnu.io.SerialPortEventListener;
 public class CatPort implements SerialPortEventListener {
 
 	private static final Object SERIAL_PORT_ARDUINO = "/dev/ttyACM0";
-	private Set<String> collectedValues;
+	private List<String> collectedValues;
 	private SerialPort serialPort;
 	final static int TIME_OUT = 2000;
 	private static final int DATA_RATE = 9600;
 	private BufferedReader input;
 	private OutputStream output;
 
-	public CatPort(Set<String> collectedValues) {
+	public CatPort(List<String> collectedValues) {
 		this.collectedValues = collectedValues;
 	}
 

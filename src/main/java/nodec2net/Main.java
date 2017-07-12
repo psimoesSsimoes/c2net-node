@@ -1,5 +1,7 @@
 package nodec2net;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -11,7 +13,7 @@ public class Main {
 	public static void main(String[] args) {
 		
 		final Map<String,Integer> control = new TreeMap<String,Integer>();
-		final Set<String> collectedValues = new TreeSet<String>();
+		final List<String> collectedValues = new ArrayList<String>();
 		
 		/**
 		Thread t1 = new Thread(new Runnable() {
@@ -35,18 +37,18 @@ public class Main {
 				}
 			}
 		});
-		t2.start();
+		t2.start();*/
 		Thread t3 = new Thread(new Runnable() {
 			public void run() {
 				try {
-					new CanSend(control).startMessageWithSensorValue();
+					new CanSend(control,collectedValues).startMessageWithSensorValue();
 				} catch (Exception e) {
 					System.out.println(e.toString());
 					System.out.println("catch no can-dump");
 				}
 			}
 		});
-		t3.start();*/
+		t3.start();
 		
 		Thread t4 = new Thread(new Runnable() {
 			public void run() {
