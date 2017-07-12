@@ -44,14 +44,18 @@ public class CanDump {
 								+ allBytesSeparated[8];
 						System.out.println("33");
 						System.out.println(hex2decimal(frequency));
-						control.put("10", hex2decimal(frequency));
+						synchronized (control) {
+							control.put("10", hex2decimal(frequency));
+						}
 						break;
 					case "41":
 						frequency = allBytesSeparated[5] + allBytesSeparated[6] + allBytesSeparated[7]
 								+ allBytesSeparated[8];
 						System.out.println("41");
 						System.out.println(hex2decimal(frequency));
-						control.put("15", hex2decimal(frequency));
+						synchronized (control) {
+							control.put("15", hex2decimal(frequency));
+						}
 						break;
 					}
 
