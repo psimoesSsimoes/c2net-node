@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class CanDump {
 	private Map<String, Integer> control;
-	private String idNode = "G1";
+	private String idNode = "A1";
 	private String idSensor = "01";
 
 	public CanDump(Map<String, Integer> control) {
@@ -14,7 +14,8 @@ public class CanDump {
 	}
 
 	public void start() {
-
+		Thread t1 = new Thread(new Runnable() {
+			public void run() {
 		try {
 			Runtime rt = Runtime.getRuntime();
 			String[] commands = { "candump", "can0" };
@@ -23,8 +24,8 @@ public class CanDump {
 			BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 
 			// read the output from the command
-			// System.out.println("Can-Dump started:\n");
-			String s = null;
+			System.out.println("Can-Dump started:\n");
+			String s;
 			while ((s = stdInput.readLine()) != null) {
 
 				// System.out.println();
@@ -43,7 +44,7 @@ public class CanDump {
 						String frequency = allBytesSeparated[5] + allBytesSeparated[6] + allBytesSeparated[7]
 								+ allBytesSeparated[8];
 						System.out.println("33");
-						System.out.println(hex2decimal(frequency));
+						
 						synchronized (control) {
 							control.put("10", hex2decimal(frequency));
 						}
@@ -52,7 +53,7 @@ public class CanDump {
 						frequency = allBytesSeparated[5] + allBytesSeparated[6] + allBytesSeparated[7]
 								+ allBytesSeparated[8];
 						System.out.println("41");
-						System.out.println(hex2decimal(frequency));
+						
 						synchronized (control) {
 							control.put("15", hex2decimal(frequency));
 						}
@@ -65,6 +66,8 @@ public class CanDump {
 			System.out.println(e.toString());
 			System.out.println("catch no can-bus");
 		}
+			}});
+		t1.start();
 
 	}
 

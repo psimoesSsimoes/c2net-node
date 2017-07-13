@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -18,7 +19,7 @@ public class Main {
 	public static void main(String[] args) {
 		
 		final Map<String,Integer> control = new TreeMap<String,Integer>();
-		final List<String> collectedValues = new ArrayList<String>();
+		final List<String> collectedValues = new LinkedList<String>();
 		
 		
 		
@@ -26,6 +27,7 @@ public class Main {
 			public void run() {
 				try {
 					new CanDump(control).start();
+					System.out.println("started candump");
 				} catch (Exception e) {
 					System.out.println(e.toString());
 					System.out.println("catch no can-dump");
@@ -37,6 +39,7 @@ public class Main {
 			public void run() {
 				try {
 					new CanSend(control,collectedValues).startPing();
+					System.out.println("started Ping");
 				} catch (Exception e) {
 					System.out.println(e.toString());
 					System.out.println("catch no can-dump");
@@ -48,6 +51,7 @@ public class Main {
 			public void run() {
 				try {
 					new CanSend(control,collectedValues).startMessageWithSensorValue();
+					System.out.println("started MessageWithSensorValue");
 				} catch (Exception e) {
 					System.out.println(e.toString());
 					System.out.println("catch no can-dump");
@@ -59,8 +63,8 @@ public class Main {
 		Thread t4 = new Thread(new Runnable() {
 			public void run() {
 				try {
-					System.out.println("lauching cat port");
 					new CatPort(collectedValues).startMessageWithSensorValue();
+					System.out.println("lauching cat port");
 				} catch (Exception e) {
 					System.out.println(e.toString());
 					System.out.println("catch no can-dump");
@@ -69,13 +73,6 @@ public class Main {
 		});
 		t4.start();
 		
-		JDBC jdbc = new JDBC();
-		TimeZone tz = TimeZone.getTimeZone("UTC");
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'"); // Quoted "Z" to indicate UTC, no timezone offset
-		df.setTimeZone(tz);
-		String nowAsISO = df.format(new Date());
-		System.out.println(nowAsISO);
-		jdbc.UpdateQuery("insert into experiment values (CURRENT_TIMESTAMP,'atum12')");
 		
 	}
 
