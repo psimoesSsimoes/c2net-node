@@ -32,6 +32,7 @@ public class CanSend {
 
 							}
 						}
+						Thread.sleep(3);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -71,6 +72,7 @@ public class CanSend {
 
 							}
 						}
+						Thread.sleep(3);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -91,10 +93,12 @@ public class CanSend {
 		case "15":
 			if (natural.equalsIgnoreCase("00") && rest.equalsIgnoreCase("00")) {
 				//args = new String[] { "cansend", "000#" + typeOfMessage + "." + idNode + ".00.00.00.00.00.00" };
+				System.out.println("Empty");
 				arg = "cansend can0 000#" + typeOfMessage + "." + idNode + ".00.00.00.00.00.00";
 			} else {
 				//args = new String[] { "cansend can0",
 					//	"000#" + typeOfMessage + "." + idNode + "." + idSensor + findRestOfMessage(natural + rest) };
+				System.out.println("with content");
 				arg = "cansend can0 000#" + typeOfMessage + "." + idNode + "." + idSensor + findRestOfMessage(natural + rest);
 			}
 			break;
