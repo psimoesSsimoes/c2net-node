@@ -21,9 +21,10 @@ public class CanSend {
 		while (true) {
 			synchronized (control) {
 				if (control.containsKey("10") && control.get("10") > 0) {
-					sendCan("10", "00");
+					sendCan("10", "00","00");
 					System.out.println("Sent ping");
-					Thread.sleep(control.get("10"));
+					//control needs to be translated to decimal
+					Thread.sleep(Integer.parseInt(decToHex(control.get("10"))));
 
 				}
 			}
@@ -37,27 +38,28 @@ public class CanSend {
 				if (control.containsKey("15") && control.get("15") > 0) {
 					synchronized (collectedValues) {
 						if (collectedValues.isEmpty()) {
-							sendCan("15", decToHex("0"));
+							sendCan("15", "00","00");
 						} else {
-							sendCan("15", decToHex((String) collectedValues.remove(0)));
+							//decimal double value needs conversion to hex. 2 bytes for natural part, 1 for rest
+							sendCan("15", decToHex(Integer.parseInt(collectedValues.remove(0).split(".")[0])),decToHex(Integer.parseInt(collectedValues.remove(0).split(".")[1])));
 						}
 					}
 					System.out.println("Sent ping");
-					Thread.sleep(control.get("15"));
+					Thread.sleep(Integer.parseInt(decToHex(control.get("15"))));
 
 				}
 			}
 		}
 	}
 
-	private void sendCan(String typeOfMessage, String value) throws IOException {
+	private void sendCan(String typeOfMessage, String natural,String rest) throws IOException {
 		String[] args=null;
 		switch(typeOfMessage){
 			case "10":
 				 args = new String[] {"cansend", "000#"+typeOfMessage+"."+idNode+".00.00.00.00.00.00"};
 				break;
 			case "15":
-				args = new String[] {"cansend", "000#"+typeOfMessage+"."+idNode+"."+idSensor+findRestOfMessage(value)};
+				args = new String[] {"cansend", "000#"+typeOfMessage+"."+idNode+"."+idSensor+findRestOfMessage(natural+"."+rest)};
 				break;
 		}
 		
@@ -67,7 +69,7 @@ public class CanSend {
 
 	private String findRestOfMessage(String value) {
 		String integer = value.split(".")[0];
-		String rest = value.split(".")[0];
+		String rest = value.split(".")[1];
 		String[] allbytes_integer =  integer.split("(?<=\\G.{2})");
 		StringBuilder x = new StringBuilder();
 		switch (allbytes_integer.length){
@@ -95,12 +97,14 @@ public class CanSend {
 			default:
 				
 		}
+		x.append("."+rest+".00");
+		System.out.println("bytes at findRestOfMessage");
 		
-		return null;
+		return x.toString();
 	}
-
+	// precondition:  d is a nonnegative integer
 	private String decToHex(int d) {
-		// precondition:  d is a nonnegative integer
+
 		
 		    String digits = "0123456789ABCDEF";
 		    if (d <= 0) return "0";
