@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class CanDump {
 	private Map<String, Integer> control;
-	private String idNode = "A1";
+	private String idNode = "B1";
 	private String idSensor = "01";
 
 	public CanDump(Map<String, Integer> control) {
@@ -46,7 +46,7 @@ public class CanDump {
 						System.out.println("33");
 						
 						synchronized (control) {
-							control.put("10", hex2decimal(frequency));
+							control.put("10", Integer.parseInt(frequency)*1000);
 						}
 						break;
 					case "41":
@@ -55,7 +55,7 @@ public class CanDump {
 						System.out.println("41");
 						
 						synchronized (control) {
-							control.put("15", hex2decimal(frequency));
+							control.put("15", Integer.parseInt(frequency)*1000);
 						}
 						break;
 					}

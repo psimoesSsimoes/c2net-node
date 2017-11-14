@@ -22,7 +22,7 @@ public class CatPort implements SerialPortEventListener {
 	private static final int DATA_RATE = 9600;
 	private BufferedReader input;
 	private OutputStream output;
-	private String idNode = "A1";
+	private String idNode = "B1";
 	private String idSensor = "01";
 
 	public CatPort(List<String> collectedValues) {
