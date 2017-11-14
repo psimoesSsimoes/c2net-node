@@ -28,10 +28,12 @@ public class CanSend {
 								sendCan("10", new String[1]);
 								System.out.println("Sent ping");
 								System.out.println("" + control.get("10"));
-								Thread.sleep(control.get("10")); 
+
+								Thread.sleep(control.get("10")*1); 
 
 							}
 						}
+
 						Thread.sleep(3);
 					}
 				} catch (Exception e) {
@@ -51,7 +53,7 @@ public class CanSend {
 							if (control.containsKey("15") && control.get("15") > 0) {
 								synchronized (collectedValues) {
 									if (collectedValues.isEmpty()) {
-										sendCan("15", new String[2]);
+										sendCan("15", null);
 									} else {
 										// decimal double value needs conversion
 										// to hex. 2 bytes for natural part, 1
@@ -67,7 +69,7 @@ public class CanSend {
 									}
 								}
 								System.out.println("Sent message with sensor value");
-								Thread.sleep(control.get("15"));
+								Thread.sleep(control.get("15")*1);
 
 							}
 						}
@@ -82,9 +84,11 @@ public class CanSend {
 	}
 
 	private void sendCan(String typeOfMessage, String[] message) throws IOException {
+		try{
 		String[] args = null;
 		String arg = null;
-		switch (typeOfMessage) {
+		String last="";	
+			switch (typeOfMessage) {
 		case "10":
 			//args = new String[] { "cansend can0", "000#" + typeOfMessage + "." + idNode + ".00.00.00.00.00.00" };
 			arg = "cansend can0 000#" + typeOfMessage + "." + idNode + ".00.00.00.00.00.00";
@@ -94,29 +98,48 @@ public class CanSend {
 					//	"000#" + typeOfMessage + "." + idNode + "." + idSensor + findRestOfMessage(natural + rest) };
 				System.out.println("with content");
 				String rest ="";
-				switch(message.length){
+				if (message ==null){
+
+			arg = "cansend can0 000#" + typeOfMessage + "." + idNode + ".00.00.00.00.00.00";
+				}else{
+
+					if (message.length==1){
+					last="00";
+					}
+					if (message.length > 1){
+					if ( message[1].length() == 1 ){
+						last = "0"+message[1];
+					}
+
+					}
+					
+				switch(message[0].length()){
 				case 1:
-					rest=".00.00.00"+insertPeriodically(message[0].trim(),".",2)+"."+message[1];
+					rest=".00.00.00"+insertPeriodically(message[0].trim(),".",2)+"."+ last;
 					break;
 				case 2:
-					rest=".00.00"+insertPeriodically(message[0].trim(),".",2)+"."+message[1];
+					rest=".00.00"+insertPeriodically(message[0].trim(),".",2)+"."+ last;
 					break;
 				case 3: 
-					rest=".00"+insertPeriodically(message[0].trim(),".",2)+"."+message[1];
+					rest=".00"+insertPeriodically(message[0].trim(),".",2)+"."+last;
 					break;
 				case 4:
-					rest=insertPeriodically(message[0].trim(),".",2)+"."+message[1];
+					rest=insertPeriodically(message[0].trim(),".",2)+"."+last;
 					break;
 				default:
 					rest=".00.00.00.00.00";
 			}
 				arg = "cansend can0 000#" + typeOfMessage + "." + idNode + "." + idSensor + rest;
+				}
 			break;
 		}
 		
 		//new ProcessBuilder(args).start();
-		
+	System.out.println(arg);	
 		Runtime.getRuntime().exec(arg);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 
 	}
 
