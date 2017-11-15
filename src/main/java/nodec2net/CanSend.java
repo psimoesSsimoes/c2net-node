@@ -115,16 +115,16 @@ public class CanSend {
 					
 				switch(message[0].length()){
 				case 1:
-					rest=".00.00.00"+insertPeriodically(message[0].trim(),".",2)+"."+ last;
+					rest=".00.00.00"+insertPeriodically(message[0].trim(),".",2)+"."+ last+".00";
 					break;
 				case 2:
-					rest=".00.00"+insertPeriodically(message[0].trim(),".",2)+"."+ last;
+					rest=".00.00"+insertPeriodically(message[0].trim(),".",2)+"."+ last+".00";
 					break;
 				case 3: 
-					rest=".00"+insertPeriodically(message[0].trim(),".",2)+"."+last;
+					rest=".00"+insertPeriodically(message[0].trim(),".",2)+"."+last+".00";
 					break;
 				case 4:
-					rest=insertPeriodically(message[0].trim(),".",2)+"."+last;
+					rest=insertPeriodically(message[0].trim(),".",2)+"."+last+".00";
 					break;
 				default:
 					rest=".00.00.00.00.00";
