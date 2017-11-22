@@ -6,16 +6,28 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.InterfaceAddress;
+import java.net.NetworkInterface;
+import java.util.Enumeration;
+
 
 public class CanSend {
 	private Map<String, Integer> control;
 	private List<String> collectedValues;
 	private String idNode = "B1";
 	private String idSensor = "01";
+	private static DatagramSocket c = new DatagramSocket();
 
 	public CanSend(Map<String, Integer> control, List<String> collectedValues) {
 		this.control = control;
 		this.collectedValues = collectedValues;
+
+          	c.setBroadcast(true);
 	}
 
 	public void startPing() throws Exception {
@@ -91,7 +103,7 @@ public class CanSend {
 			switch (typeOfMessage) {
 		case "10":
 			//args = new String[] { "cansend can0", "000#" + typeOfMessage + "." + idNode + ".00.00.00.00.00.00" };
-			arg = "cansend can0 000#" + typeOfMessage + "." + idNode + ".00.00.00.00.00.00";
+			arg =  typeOfMessage + "/" + idNode + "/00/00/00/00/00/00";
 			break;
 		case "15":
 				//args = new String[] { "cansend can0",
@@ -100,7 +112,7 @@ public class CanSend {
 				String rest ="";
 				if (message ==null){
 
-			arg = "cansend can0 000#" + typeOfMessage + "." + idNode + ".00.00.00.00.00.00";
+			arg =  typeOfMessage + "/" + idNode + "/00/00/00/00/00/00";
 				}else{
 
 					if (message.length==1){
@@ -115,34 +127,41 @@ public class CanSend {
 					
 				switch(message[0].length()){
 				case 1:
-					rest=".00.00.00"+insertPeriodically(message[0].trim(),".",2)+"."+ last+".00";
+					rest="/00/00/00"+insertPeriodically(message[0].trim(),"/",2)+"/"+ last+"/00";
 					break;
 				case 2:
-					rest=".00.00"+insertPeriodically(message[0].trim(),".",2)+"."+ last+".00";
+					rest="/00/00"+insertPeriodically(message[0].trim(),"/",2)+"/"+ last+"/00";
 					break;
 				case 3: 
-					rest=".00"+insertPeriodically(message[0].trim(),".",2)+"."+last+".00";
+					rest="/00"+insertPeriodically(message[0].trim(),"/",2)+"/"+last+"/00";
 					break;
 				case 4:
-					rest=insertPeriodically(message[0].trim(),".",2)+"."+last+".00";
+					rest=insertPeriodically(message[0].trim(),"/",2)+"/"+last+"/00";
 					break;
 				default:
-					rest=".00.00.00.00.00";
+					rest="/00/00/00/00/00";
 			}
-				arg = "cansend can0 000#" + typeOfMessage + "." + idNode + "." + idSensor + rest;
+				arg = typeOfMessage + "/" + idNode + "/" + idSensor + rest;
 				}
 			break;
 		}
 		
-		//new ProcessBuilder(args).start();
-	System.out.println(arg);	
-		Runtime.getRuntime().exec(arg);
+	System.out.println(arg);
+	   //Open a random port to send the package
+
+
+          byte[] sendData = arg.getBytes();
+
+          //Try the 255.255.255.255 first
+            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("255.255.255.255"), 8888);
+            c.send(sendPacket);
+            System.out.println("sent packet");
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 
 	}
-
+/*
 	private String findRestOfMessage(String value) {
 		
 		  
@@ -154,7 +173,7 @@ public class CanSend {
 		 
 		 return x.toString();
 
-	}
+	}*/
 	
 
 	private String insertPeriodically(String text, String insert, int period){
