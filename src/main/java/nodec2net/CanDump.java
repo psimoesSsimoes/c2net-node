@@ -32,8 +32,9 @@ public class CanDump {
 			                  serverSocket.receive(receivePacket);
 			                  String msg = new String( receivePacket.getData());
 					  System.out.println("Received message"+msg);
-			               	  String[] bytes = msg.split("/");
-					  switch(bytes[0]){
+			               	  String[] bytes = msg.trim().split("/");
+					  System.out.println(bytes[1]);
+					  switch(bytes[1]){
 
 						case "33":
 							String frequency = bytes[5] + bytes[6] + bytes[7];
