@@ -33,7 +33,6 @@ public class CanDump {
 			                  String msg = new String( receivePacket.getData());
 					  System.out.println("Received message"+msg);
 			               	  String[] bytes = msg.split("/");
-					  System.out.println(Arrays.toString(bytes));
 					  switch(bytes[0]){
 
 						case "33":

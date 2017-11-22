@@ -21,13 +21,13 @@ public class CanSend {
 	private List<String> collectedValues;
 	private String idNode = "B1";
 	private String idSensor = "01";
-	private static DatagramSocket c = new DatagramSocket();
+
 
 	public CanSend(Map<String, Integer> control, List<String> collectedValues) {
 		this.control = control;
 		this.collectedValues = collectedValues;
 
-          	c.setBroadcast(true);
+
 	}
 
 	public void startPing() throws Exception {
@@ -150,6 +150,9 @@ public class CanSend {
 	   //Open a random port to send the package
 
 
+	DatagramSocket c = new DatagramSocket();
+
+          	c.setBroadcast(true);
           byte[] sendData = arg.getBytes();
 
           //Try the 255.255.255.255 first
