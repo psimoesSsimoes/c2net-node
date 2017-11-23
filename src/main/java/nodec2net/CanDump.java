@@ -34,7 +34,7 @@ public class CanDump {
 					  System.out.println("Received message"+msg);
 			               	  String[] bytes = msg.trim().split("/");
 					  System.out.println(bytes[1]);
-					  switch(bytes[1]){
+					  switch(bytes[0]){
 
 						case "33":
 							String frequency = bytes[5] + bytes[6] + bytes[7];
